@@ -36,9 +36,12 @@ public:
     }
 
     friend std::ostream& operator<<(std::ostream& out, const HashTable<V>& th) {
+        out << "Elemento " << th.n << "\n Tamaño: " << th.max << "\n";
         for (int i = 0; i < th.max; i++) {
-            out << "Cubeta " << i << ": " << th.table[i] << std::endl;
+            out << " Cubeta " << i << "\n";
+            out << "Lista: " << th.table[i] << "\n";
         }
+        out << "\n";
         return out;
     }
 
@@ -54,8 +57,12 @@ public:
 
     void insert(std::string key, V value) override {
         int index = h(key);
-        TableEntry<V> entry(key, value);
-        table[index].append(entry);
+        TableEntry<V> entry(key);
+        int pos = table[index].search(entry);
+        if (pos != -1) {
+            throw std::runtime_error("Clave '" + key + "' ya existe");
+        }
+        table[index].prepend(TableEntry<V>(key, value));
         n++;
     }
 
@@ -64,7 +71,7 @@ public:
         TableEntry<V> entry(key);
         int pos = table[index].search(entry);
         if (pos == -1) {
-            throw std::runtime_error("Clave no encontrada");
+            throw std::runtime_error("Clave '" + key + "' no encontrada");
         }
         return table[index].get(pos).value;
     }
@@ -74,11 +81,12 @@ public:
         TableEntry<V> entry(key);
         int pos = table[index].search(entry);
         if (pos == -1) {
-            throw std::runtime_error("Clave no encontrada");
+            throw std::runtime_error("Clave '" + key + "' no encontrada");
         }
+        V removedValue = table[index].get(pos).value;
         table[index].remove(pos);
         n--;
-        return entry.value;
+        return removedValue;
     }
 
     int entries() override {
