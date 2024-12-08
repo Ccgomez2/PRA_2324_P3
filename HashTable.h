@@ -17,7 +17,7 @@ private:
     int h(std::string key) {
         int sum = 0;
         for (char c : key) {
-            sum += static_cast<int>(c);
+            sum +=c;
         }
         return sum % max;
     }
