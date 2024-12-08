@@ -19,12 +19,12 @@ class BSTreeDict: public Dict<V> {
 	    ~BSTreeDict(){
 	    	delete tree;
 	    }
-	    V operator[](std::string key) override {
+	    V operator[](std::string key) {
 	    	TableEntry<V> entry(key);
 		return tree->search(entry).value;
 	    }
 	    friend std::ostream& operator<<(std::ostream& out, const BSTreeDict<V>& bs) {
-	    	out << bs.tree;//puntero?
+	    	out << *(bs.tree);
 		return out;
 	    }
 	    void insert(std::string key, V value) override {
